@@ -1,0 +1,60 @@
+version: '3.5'
+
+services:
+
+  service-yoga:
+    image: htmldemo/yoga:0.0.1
+    ports:
+      - 6001:80
+    deploy:
+      mode: global
+      #replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+
+
+  service-unika:
+    image: htmldemo/lodge:latest
+    ports:
+      - 6002:80
+    deploy:
+      mode: global
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+
+
+  service-chat:
+    image: oudamdevops/chatapp:0.0.5
+    ports:
+      - 6003:3000
+    deploy:
+      mode: global
+      #replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+
+
+  internal-gateway:
+    image: oudamdevops/haproxy:1.7-alpine
+    ports:
+      - 80:80
+    deploy:
+      mode: global
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
